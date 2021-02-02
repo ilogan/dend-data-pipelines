@@ -30,12 +30,17 @@ start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
 stage_events_to_redshift = StageToRedshiftOperator(
     task_id='Stage_events',
-    dag=dag
+    dag=dag,
+    table="staging_events",
+    s3_key="log_data/{execution_date.year}/{execution_date.month}/{ds}-events.json",
+    s3_jsonpaths_file="log_json_path.json"
 )
 
 stage_songs_to_redshift = StageToRedshiftOperator(
     task_id='Stage_songs',
-    dag=dag
+    dag=dag,
+    table="staging_songs",
+    s3_key="song_data"
 )
 
 load_songplays_table = LoadFactOperator(
