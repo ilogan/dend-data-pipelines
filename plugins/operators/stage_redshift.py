@@ -41,9 +41,6 @@ class StageToRedshiftOperator(BaseOperator):
         self.log.info("Connecting to Redshift...")
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
-        self.log.info(f"Clearing rows from {self.table}...")
-        redshift.run(f"DELETE FROM {self.table}")
-
         self.log.info(f"Copying data from S3 to Redshift...")
         s3_key_rendered = self.s3_key.format(**context)
         s3_path = f"s3://{self.s3_bucket}/{s3_key_rendered}"
