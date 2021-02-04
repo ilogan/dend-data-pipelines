@@ -80,9 +80,19 @@ load_time_dimension_table = LoadDimensionOperator(
 )
 
 # data quality checking
+custom_query_assertions = [
+    ("SELECT COUNT(*) FROM songplays WHERE playid IS NULL", 0),
+    ("SELECT COUNT(*) FROM users WHERE userid IS NULL", 0),
+    ("SELECT COUNT(*) FROM songs WHERE songid IS NULL", 0),
+    ("SELECT COUNT(*) FROM artists WHERE artistid IS NULL", 0),
+    ("SELECT COUNT(*) FROM time WHERE start_time IS NULL", 0),
+]
+
 run_quality_checks = DataQualityOperator(
     task_id="Run_data_quality_checks",
-    dag=dag
+    dag=dag,
+    tables=["songplays", "users", "songs", "artists", "time"],
+    custom_query_asserts=custom_query_assertions
 )
 
 # end
